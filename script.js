@@ -79,23 +79,55 @@ document.querySelectorAll('.hero-stats strong[data-count]').forEach((el) => {
   setTimeout(() => { el.textContent = finalText; }, 650 + duration + 300);
 });
 
-// 문의 폼 제출 (데모: 실제 전송 없이 안내 메시지 표시)
+// 문의 폼 제출 (Formspree 연동 - 접수 시 이메일로 전달)
+const FORMSPREE_ID = 'xqevwqza'; // formspree.io 폼 ID
 const form = document.getElementById('contactForm');
 const formNote = document.getElementById('formNote');
+const submitBtn = form.querySelector('button[type="submit"]');
 
-form.addEventListener('submit', (e) => {
+const showNote = (msg, type) => {
+  formNote.textContent = msg;
+  formNote.classList.toggle('is-error', type === 'error');
+  formNote.classList.toggle('is-success', type !== 'error');
+  formNote.hidden = false;
+};
+
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = form.name.value.trim();
   const phone = form.phone.value.trim();
 
   if (!name || !phone) {
-    alert('이름과 연락처를 입력해 주세요.');
+    showNote('이름과 연락처를 입력해 주세요.', 'error');
+    return;
+  }
+  if (FORMSPREE_ID === 'REPLACE_ME') {
+    showNote('폼 연동이 아직 설정되지 않았습니다. 전화로 문의해 주세요.', 'error');
     return;
   }
 
-  // TODO: 실제 서버/이메일 연동 시 이곳에서 전송 처리
-  formNote.hidden = false;
-  form.reset();
+  const original = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = '보내는 중...';
+
+  try {
+    const res = await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: new FormData(form),
+    });
+    if (res.ok) {
+      showNote('문의가 접수되었습니다. 빠르게 연락드리겠습니다.', 'success');
+      form.reset();
+    } else {
+      showNote('전송에 실패했습니다. 잠시 후 다시 시도하시거나 전화로 문의해 주세요.', 'error');
+    }
+  } catch {
+    showNote('네트워크 오류로 전송하지 못했습니다. 전화로 문의해 주세요.', 'error');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = original;
+  }
 });
 
 // 히어로 제목 타이핑 효과
