@@ -163,57 +163,13 @@
           <button class="gtab" type="button" role="tab" data-cat="interior" aria-selected="false">인테리어</button>
         </div>
 
-        <div class="gallery-grid" id="galleryGrid">
-          <!-- 원상복구 및 철거 -->
-          <figure class="ba-item" data-cat="restore">
-            <div class="ba" style="--pos:50%">
-              <img class="ba-img ba-after" src="images/gallery/placeholder-after.svg" alt="원상복구 시공 후" />
-              <img class="ba-img ba-before" src="images/gallery/placeholder-before.svg" alt="원상복구 시공 전" />
-              <span class="ba-tag ba-tag-before">BEFORE</span>
-              <span class="ba-tag ba-tag-after">AFTER</span>
-              <div class="ba-handle" aria-hidden="true"></div>
-              <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="시공 전후 비교 슬라이더" />
-            </div>
-            <figcaption>○○ 상가 원상복구</figcaption>
-          </figure>
-
-          <figure class="ba-item" data-cat="restore">
-            <div class="ba" style="--pos:50%">
-              <img class="ba-img ba-after" src="images/gallery/placeholder-after.svg" alt="철거 시공 후" />
-              <img class="ba-img ba-before" src="images/gallery/placeholder-before.svg" alt="철거 시공 전" />
-              <span class="ba-tag ba-tag-before">BEFORE</span>
-              <span class="ba-tag ba-tag-after">AFTER</span>
-              <div class="ba-handle" aria-hidden="true"></div>
-              <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="시공 전후 비교 슬라이더" />
-            </div>
-            <figcaption>○○ 사무실 철거</figcaption>
-          </figure>
-
-          <!-- 인테리어 -->
-          <figure class="ba-item" data-cat="interior" hidden>
-            <div class="ba" style="--pos:50%">
-              <img class="ba-img ba-after" src="images/gallery/placeholder-after.svg" alt="인테리어 시공 후" />
-              <img class="ba-img ba-before" src="images/gallery/placeholder-before.svg" alt="인테리어 시공 전" />
-              <span class="ba-tag ba-tag-before">BEFORE</span>
-              <span class="ba-tag ba-tag-after">AFTER</span>
-              <div class="ba-handle" aria-hidden="true"></div>
-              <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="시공 전후 비교 슬라이더" />
-            </div>
-            <figcaption>○○ 카페 인테리어</figcaption>
-          </figure>
-
-          <figure class="ba-item" data-cat="interior" hidden>
-            <div class="ba" style="--pos:50%">
-              <img class="ba-img ba-after" src="images/gallery/placeholder-after.svg" alt="인테리어 시공 후" />
-              <img class="ba-img ba-before" src="images/gallery/placeholder-before.svg" alt="인테리어 시공 전" />
-              <span class="ba-tag ba-tag-before">BEFORE</span>
-              <span class="ba-tag ba-tag-after">AFTER</span>
-              <div class="ba-handle" aria-hidden="true"></div>
-              <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="시공 전후 비교 슬라이더" />
-            </div>
-            <figcaption>○○ 매장 인테리어</figcaption>
-          </figure>
+        <div class="gallery-carousel">
+          <button class="gcar-btn gcar-prev" type="button" aria-label="이전 사례">&#8249;</button>
+          <!-- 갤러리 항목은 script.js 의 GALLERY_ITEMS 데이터로 생성됩니다 -->
+          <div class="gallery-track" id="galleryTrack"></div>
+          <button class="gcar-btn gcar-next" type="button" aria-label="다음 사례">&#8250;</button>
         </div>
+        <div class="gallery-dots" id="galleryDots" aria-hidden="true"></div>
       </div>
     </section>
 

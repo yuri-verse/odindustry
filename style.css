@@ -364,17 +364,73 @@ a { color: inherit; text-decoration: none; }
   color: #fff;
 }
 
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+.gallery-carousel { position: relative; }
+.gallery-track {
+  position: relative;
+  display: flex;
   gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;          /* Firefox 스크롤바 숨김 */
+  -ms-overflow-style: none;
 }
-.ba-item { margin: 0; }
+.gallery-track::-webkit-scrollbar { display: none; }
+
+.ba-item {
+  margin: 0;
+  flex: 0 0 calc(50% - 12px);     /* 데스크톱: 한 번에 2개 */
+  scroll-snap-align: start;
+}
 .ba-item[hidden] { display: none; }
 .ba-item figcaption {
   margin-top: 12px;
   font-weight: 700;
   color: var(--ink);
+}
+
+/* 좌우 이동 버튼 */
+.gcar-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px; height: 46px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 6;
+  transition: color .2s ease, border-color .2s ease, background .2s ease;
+}
+.gcar-btn:hover { color: var(--brand-dark); border-color: var(--brand); }
+.gcar-prev { left: -12px; }
+.gcar-next { right: -12px; }
+
+/* 하단 점 인디케이터 */
+.gallery-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+.gdot {
+  width: 8px; height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--line);
+  cursor: pointer;
+  transition: width .25s ease, background .25s ease;
+}
+.gdot.is-active {
+  width: 22px;
+  border-radius: 4px;
+  background: var(--brand);
 }
 
 .ba {
@@ -453,7 +509,9 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 720px) {
-  .gallery-grid { grid-template-columns: 1fr; }
+  .ba-item { flex-basis: 100%; }      /* 모바일: 한 번에 1개 */
+  .gcar-prev { left: 4px; }
+  .gcar-next { right: 4px; }
 }
 
 /* ---------- 푸터 ---------- */

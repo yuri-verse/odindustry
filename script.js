@@ -1,5 +1,35 @@
 // ===== 오디산업 홈페이지 스크립트 =====
 
+// 시공 사례 데이터 - 여기에 항목을 추가하면 갤러리에 자동 반영됩니다.
+//   cat: 'restore'(원상복구·철거) 또는 'interior'(인테리어)
+//   before/after: 사진 경로,  caption: 사례 설명
+const GALLERY_ITEMS = [
+  { cat: 'restore',  before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 상가 원상복구' },
+  { cat: 'restore',  before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 사무실 철거' },
+  { cat: 'restore',  before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 건물 내부 철거' },
+  { cat: 'restore',  before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 매장 원상복구' },
+  { cat: 'interior', before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 카페 인테리어' },
+  { cat: 'interior', before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 사무실 인테리어' },
+  { cat: 'interior', before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 매장 인테리어' },
+  { cat: 'interior', before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 주택 인테리어' },
+];
+
+const galleryTrack = document.getElementById('galleryTrack');
+if (galleryTrack) {
+  galleryTrack.innerHTML = GALLERY_ITEMS.map((it) => `
+    <figure class="ba-item" data-cat="${it.cat}">
+      <div class="ba" style="--pos:50%">
+        <img class="ba-img ba-after" src="${it.after}" alt="시공 후 - ${it.caption}" />
+        <img class="ba-img ba-before" src="${it.before}" alt="시공 전 - ${it.caption}" />
+        <span class="ba-tag ba-tag-before">BEFORE</span>
+        <span class="ba-tag ba-tag-after">AFTER</span>
+        <div class="ba-handle" aria-hidden="true"></div>
+        <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="시공 전후 비교 슬라이더" />
+      </div>
+      <figcaption>${it.caption}</figcaption>
+    </figure>`).join('');
+}
+
 // 모바일 메뉴 토글
 const navToggle = document.getElementById('navToggle');
 const nav = document.getElementById('nav');
@@ -22,12 +52,12 @@ nav.querySelectorAll('a').forEach((link) => {
 
 // 스크롤 등장 애니메이션 (같은 그룹은 순차 등장 - stagger)
 const revealTargets = document.querySelectorAll(
-  '.card, .feature, .steps li, .section-head, .contact-form, .contact-info, .ba-item'
+  '.card, .feature, .steps li, .section-head, .contact-form, .contact-info'
 );
 revealTargets.forEach((el) => el.classList.add('reveal'));
 
 // 형제 요소끼리 지연시간을 줘서 하나씩 나타나게 함
-document.querySelectorAll('.cards, .features, .steps, .gallery-grid').forEach((group) => {
+document.querySelectorAll('.cards, .features, .steps').forEach((group) => {
   Array.from(group.children).forEach((child, i) => {
     child.style.transitionDelay = i * 0.09 + 's';
   });
@@ -130,24 +160,11 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// 시공 사례 갤러리 - 카테고리 탭
+// ===== 시공 사례 갤러리 =====
 const galleryTabs = document.querySelectorAll('.gtab');
 const galleryItems = document.querySelectorAll('.ba-item');
-galleryTabs.forEach((tab) => {
-  tab.addEventListener('click', () => {
-    const cat = tab.dataset.cat;
-    galleryTabs.forEach((t) => {
-      const active = t === tab;
-      t.classList.toggle('is-active', active);
-      t.setAttribute('aria-selected', String(active));
-    });
-    galleryItems.forEach((item) => {
-      item.hidden = item.dataset.cat !== cat;
-    });
-  });
-});
 
-// 시공 사례 갤러리 - before/after 비교 슬라이더
+// before/after 비교 슬라이더 (마우스/터치 드래그)
 document.querySelectorAll('.ba').forEach((ba) => {
   const range = ba.querySelector('.ba-range');
   const setPos = (pct) => {
@@ -155,8 +172,6 @@ document.querySelectorAll('.ba').forEach((ba) => {
     ba.style.setProperty('--pos', clamped + '%');
     if (range) range.value = clamped;
   };
-
-  // 포인터 드래그(마우스 + 터치)
   let dragging = false;
   const posFromEvent = (e) => {
     const rect = ba.getBoundingClientRect();
@@ -167,16 +182,118 @@ document.querySelectorAll('.ba').forEach((ba) => {
     ba.setPointerCapture(e.pointerId);
     posFromEvent(e);
   });
-  ba.addEventListener('pointermove', (e) => {
-    if (dragging) posFromEvent(e);
-  });
-  const stop = () => { dragging = false; };
-  ba.addEventListener('pointerup', stop);
-  ba.addEventListener('pointercancel', stop);
-
-  // 키보드 접근용 range
+  ba.addEventListener('pointermove', (e) => { if (dragging) posFromEvent(e); });
+  const endDrag = () => { dragging = false; };
+  ba.addEventListener('pointerup', endDrag);
+  ba.addEventListener('pointercancel', endDrag);
   if (range) range.addEventListener('input', () => setPos(Number(range.value)));
 });
+
+// 캐러셀: 자동 슬라이드 + 좌우 화살표 + 점 + 카테고리 탭
+if (galleryTrack) {
+  const prevBtn = document.querySelector('.gcar-prev');
+  const nextBtn = document.querySelector('.gcar-next');
+  const dotsBox = document.getElementById('galleryDots');
+  const carousel = document.querySelector('.gallery-carousel');
+  let curCat = 'restore';
+  let idx = 0;
+  let timer = null;
+
+  const visible = () => Array.from(galleryItems).filter((it) => it.dataset.cat === curCat);
+  const perView = () => (window.innerWidth <= 720 ? 1 : 2);
+  const maxIdx = () => Math.max(0, visible().length - perView());
+
+  const goTo = (i, smooth = true) => {
+    const items = visible();
+    if (!items.length) return;
+    const last = maxIdx();
+    idx = i < 0 ? last : i > last ? 0 : i; // 끝에서 순환
+    galleryTrack.scrollTo({ left: items[idx].offsetLeft, behavior: smooth ? 'smooth' : 'auto' });
+    syncDots();
+  };
+
+  function stopAuto() { if (timer) { clearInterval(timer); timer = null; } }
+  const startAuto = () => {
+    stopAuto();
+    if (maxIdx() > 0 && !reduceMotion) timer = window.setInterval(() => goTo(idx + 1), 4000);
+  };
+
+  const buildDots = () => {
+    const pages = maxIdx() + 1;
+    dotsBox.innerHTML = '';
+    dotsBox.style.display = pages > 1 ? 'flex' : 'none';
+    for (let i = 0; i < pages; i++) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'gdot' + (i === idx ? ' is-active' : '');
+      b.setAttribute('aria-label', i + 1 + '번째 사례로 이동');
+      b.addEventListener('click', () => { goTo(i); startAuto(); });
+      dotsBox.appendChild(b);
+    }
+  };
+  function syncDots() {
+    Array.from(dotsBox.children).forEach((d, i) => d.classList.toggle('is-active', i === idx));
+  }
+  const updateControls = () => {
+    const many = maxIdx() > 0;
+    [prevBtn, nextBtn].forEach((b) => { if (b) b.style.display = many ? 'grid' : 'none'; });
+  };
+
+  const setCat = (cat) => {
+    curCat = cat;
+    galleryTabs.forEach((t) => {
+      const active = t.dataset.cat === cat;
+      t.classList.toggle('is-active', active);
+      t.setAttribute('aria-selected', String(active));
+    });
+    galleryItems.forEach((it) => { it.hidden = it.dataset.cat !== cat; });
+    idx = 0;
+    buildDots();
+    updateControls();
+    goTo(0, false);
+    startAuto();
+  };
+
+  galleryTabs.forEach((t) => t.addEventListener('click', () => setCat(t.dataset.cat)));
+  if (prevBtn) prevBtn.addEventListener('click', () => { goTo(idx - 1); startAuto(); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { goTo(idx + 1); startAuto(); });
+
+  // 마우스 올리거나 드래그 중이면 자동 슬라이드 정지, 벗어나면 재개
+  carousel.addEventListener('mouseenter', stopAuto);
+  carousel.addEventListener('mouseleave', startAuto);
+  carousel.addEventListener('pointerdown', stopAuto);
+  window.addEventListener('pointerup', startAuto);
+
+  // 손으로 스와이프했을 때 현재 위치·점 동기화
+  let scrollDebounce = null;
+  galleryTrack.addEventListener('scroll', () => {
+    clearTimeout(scrollDebounce);
+    scrollDebounce = setTimeout(() => {
+      const items = visible();
+      let nearest = 0;
+      let min = Infinity;
+      items.forEach((it, i) => {
+        const d = Math.abs(it.offsetLeft - galleryTrack.scrollLeft);
+        if (d < min) { min = d; nearest = i; }
+      });
+      idx = Math.min(nearest, maxIdx());
+      syncDots();
+    }, 120);
+  });
+
+  // 창 크기 변경 시 재계산 (2개↔1개 뷰 전환)
+  let resizeDebounce = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeDebounce);
+    resizeDebounce = setTimeout(() => {
+      buildDots();
+      updateControls();
+      goTo(Math.min(idx, maxIdx()), false);
+    }, 150);
+  });
+
+  setCat('restore');
+}
 
 // 히어로 제목 타이핑 효과
 (function typeHeroTitle() {
