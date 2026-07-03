@@ -137,10 +137,7 @@ a { color: inherit; text-decoration: none; }
 /* ---------- 히어로 ---------- */
 .hero {
   position: relative;
-  background:
-    radial-gradient(760px 440px at 90% -8%, var(--accent-light), transparent 58%),
-    radial-gradient(900px 560px at 2% 118%, var(--brand-light), transparent 55%),
-    linear-gradient(180deg, var(--brand-050), var(--paper));
+  background: linear-gradient(180deg, var(--brand-050), var(--paper));
   padding: 92px 0 84px;
   overflow: hidden;
 }
@@ -224,13 +221,14 @@ a { color: inherit; text-decoration: none; }
   border-color: var(--brand);
 }
 .card-icon {
-  width: 56px; height: 56px;
+  width: 54px; height: 54px;
   display: grid; place-items: center;
   background: var(--brand-light);
-  border-radius: 14px;
-  font-size: 1.6rem;
-  margin-bottom: 18px;
+  color: var(--brand);
+  border-radius: 13px;
+  margin-bottom: 20px;
 }
+.card-icon svg { width: 27px; height: 27px; }
 .card h3 { font-size: 1.3rem; margin-bottom: 10px; }
 .card p { color: var(--ink-soft); margin-bottom: 16px; }
 .card-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
@@ -714,25 +712,11 @@ a { color: inherit; text-decoration: none; }
 @keyframes caretBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
 /* 히어로 배경 은은한 움직임 */
-@keyframes floatGlow {
-  0%, 100% { transform: translate(0, 0); }
-  50%      { transform: translate(-20px, 14px); }
-}
-.hero::before {
-  content: "";
-  position: absolute;
-  top: -140px; right: -60px;
-  width: 440px; height: 440px;
-  background: radial-gradient(circle, var(--brand-light), transparent 68%);
-  animation: floatGlow 10s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
-}
 .hero-inner { position: relative; z-index: 1; }
 
 /* ---------- 카드 아이콘 미세 모션 ---------- */
-.card-icon { transition: transform .25s ease, background .25s ease; }
-.card:hover .card-icon { transform: translateY(-3px) rotate(-5deg); }
+.card-icon { transition: background .25s ease, color .25s ease; }
+.card:hover .card-icon { background: var(--brand); color: #fff; }
 
 /* ---------- 헤더 스크롤 시 그림자 ---------- */
 .site-header.scrolled { box-shadow: 0 6px 20px rgba(31, 38, 34, 0.08); }
