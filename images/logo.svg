@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 210" width="340" height="210" role="img" aria-label="오디산업 OD INDUSTRY">
+  <!-- od 모노그램 (원본 색 #58645C) -->
+  <g fill="#58645C">
+    <circle cx="170" cy="76" r="42" fill="none" stroke="#58645C" stroke-width="17"/>
+    <rect x="203.5" y="18" width="17" height="108" rx="8.5"/>
+    <circle cx="170" cy="76" r="17"/>
+  </g>
+
+  <!-- 워드마크 -->
+  <text x="170" y="188" text-anchor="middle"
+        font-family="'Pretendard','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif"
+        font-size="34" font-weight="800" letter-spacing="7" fill="#58645C">OD INDUSTRY</text>
+</svg>
