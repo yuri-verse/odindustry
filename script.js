@@ -193,7 +193,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !contactModal.hidden) closeContactModal();
 });
 
-// ===== 인라인 달력 (클릭 단일 / 드래그 기간 선택) =====
+// ===== 인라인 달력 (여러 날짜 선택 / 드래그로 여러 날 선택·해제) =====
 function initCalendar(rootId, inputId) {
   const root = document.getElementById(rootId);
   if (!root) return;
@@ -205,33 +205,46 @@ function initCalendar(rootId, inputId) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   let view = new Date(today.getFullYear(), today.getMonth(), 1);
-  let start = null;
-  let end = null;
+  const selected = new Set(); // 'YYYY-MM-DD'
   let dragging = false;
+  let mode = 'add'; // 'add' | 'remove'
 
   const pad = (n) => String(n).padStart(2, '0');
   const fmt = (d) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-  const parse = (s) => { const p = s.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); };
-  const order = () => {
-    if (!start) return [null, null];
-    const e = end || start;
-    return start <= e ? [start, e] : [e, start];
+  const nextDay = (s) => {
+    const p = s.split('-').map(Number);
+    return fmt(new Date(p[0], p[1] - 1, p[2] + 1));
   };
 
-  function update() {
-    const [lo, hi] = order();
+  // 선택된 날짜를 연속 구간으로 묶어 표시 (예: 7-10 ~ 7-12, 7-15)
+  function buildText() {
+    const arr = [...selected].sort();
+    if (!arr.length) return '';
+    const groups = [];
+    let s = arr[0];
+    let prev = arr[0];
+    for (let i = 1; i < arr.length; i++) {
+      if (nextDay(prev) === arr[i]) { prev = arr[i]; }
+      else { groups.push([s, prev]); s = arr[i]; prev = arr[i]; }
+    }
+    groups.push([s, prev]);
+    return groups.map((g) => (g[0] === g[1] ? g[0] : g[0] + ' ~ ' + g[1])).join(', ');
+  }
+
+  function refresh() {
     daysEl.querySelectorAll('.cal-day').forEach((c) => {
-      c.classList.remove('is-start', 'is-end', 'is-range');
       if (!c.dataset.date) return;
-      const d = parse(c.dataset.date);
-      if (lo && d >= lo && d <= hi) c.classList.add('is-range');
-      if (lo && fmt(d) === fmt(lo)) c.classList.add('is-start');
-      if (hi && fmt(d) === fmt(hi)) c.classList.add('is-end');
+      c.classList.toggle('is-sel', selected.has(c.dataset.date));
     });
-    if (!lo) { input.value = ''; selEl.textContent = '없음'; return; }
-    const text = fmt(lo) === fmt(hi) ? fmt(lo) : fmt(lo) + ' ~ ' + fmt(hi);
+    const text = buildText();
     input.value = text;
-    selEl.textContent = text;
+    selEl.textContent = text || '없음';
+  }
+
+  function apply(dateStr) {
+    if (mode === 'add') selected.add(dateStr);
+    else selected.delete(dateStr);
+    refresh();
   }
 
   function render() {
@@ -254,7 +267,7 @@ function initCalendar(rootId, inputId) {
       else cell.dataset.date = fmt(date);
       daysEl.appendChild(cell);
     }
-    update();
+    refresh();
   }
 
   const dayFromPoint = (x, y) => {
@@ -268,14 +281,13 @@ function initCalendar(rootId, inputId) {
     if (!c || !c.dataset.date || c.disabled) return;
     e.preventDefault();
     dragging = true;
-    start = parse(c.dataset.date);
-    end = null;
-    update();
+    mode = selected.has(c.dataset.date) ? 'remove' : 'add'; // 시작 칸 기준으로 추가/해제
+    apply(c.dataset.date);
   });
   document.addEventListener('pointermove', (e) => {
     if (!dragging) return;
     const c = dayFromPoint(e.clientX, e.clientY);
-    if (c) { end = parse(c.dataset.date); update(); }
+    if (c) apply(c.dataset.date);
   });
   document.addEventListener('pointerup', () => { dragging = false; });
 
@@ -292,6 +304,19 @@ function initCalendar(rootId, inputId) {
 }
 initCalendar('visitCal', 'visitValue');
 initCalendar('demoCal', 'demoValue');
+
+// 문의 유형 / 현장에서 '기타' 선택 시 입력칸 표시
+document.querySelectorAll('.check-chips input[value="기타"]').forEach((cb) => {
+  const field = cb.closest('.type-field');
+  const etc = field ? field.querySelector('.etc-input') : null;
+  if (!etc) return;
+  const sync = (focus) => {
+    etc.style.display = cb.checked ? 'block' : 'none';
+    if (cb.checked && focus) etc.focus();
+  };
+  cb.addEventListener('change', () => sync(true));
+  sync(false); // 초기 상태 반영
+});
 
 // ===== 시공 사례 갤러리 =====
 const galleryTabs = document.querySelectorAll('.gtab');

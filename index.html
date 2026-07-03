@@ -377,6 +377,7 @@
             <label class="check-chip"><input type="checkbox" name="문의유형[]" value="인테리어" /><span>인테리어</span></label>
             <label class="check-chip"><input type="checkbox" name="문의유형[]" value="기타" /><span>기타</span></label>
           </div>
+          <input type="text" class="etc-input" name="문의유형_기타" placeholder="기타 유형을 입력해 주세요" />
         </div>
         <div class="type-field">
           <span class="type-label">현장 <em>중복 선택 가능</em></span>
@@ -388,9 +389,10 @@
             <label class="check-chip"><input type="checkbox" name="현장[]" value="공장" /><span>공장</span></label>
             <label class="check-chip"><input type="checkbox" name="현장[]" value="기타" /><span>기타</span></label>
           </div>
+          <input type="text" class="etc-input" name="현장_기타" placeholder="기타 현장을 입력해 주세요" />
         </div>
         <div class="type-field">
-          <span class="type-label">희망 방문 일정 <em>날짜 클릭 · 드래그로 기간 선택</em></span>
+          <span class="type-label">희망 방문 일정 <em>여러 날짜 선택 · 드래그로 여러 날</em></span>
           <div class="cal" id="visitCal">
             <div class="cal-head">
               <button type="button" class="cal-nav" data-cal-prev aria-label="이전 달">‹</button>
@@ -405,7 +407,7 @@
         </div>
 
         <div class="type-field">
-          <span class="type-label">철거 희망 일정 <em>날짜 클릭 · 드래그로 기간 선택</em></span>
+          <span class="type-label">철거 희망 일정 <em>여러 날짜 선택 · 드래그로 여러 날</em></span>
           <div class="cal" id="demoCal">
             <div class="cal-head">
               <button type="button" class="cal-nav" data-cal-prev aria-label="이전 달">‹</button>

@@ -556,10 +556,12 @@ a { color: inherit; text-decoration: none; }
 .cal-day.cal-empty { visibility: hidden; cursor: default; }
 .cal-day.cal-past { color: #c4c9c5; cursor: default; }
 .cal-day:not(.cal-past):not(.cal-empty):hover { background: var(--brand-light); }
-.cal-day.is-range { background: var(--brand-light); }
-.cal-day.is-start, .cal-day.is-end { background: var(--brand); color: #fff; }
-.cal-selected { margin-top: 10px; font-size: 0.9rem; color: var(--ink-soft); }
+.cal-day.is-sel { background: var(--brand); color: #fff; }
+.cal-selected { margin-top: 10px; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5; }
 .cal-selected strong { color: var(--brand-dark); }
+
+/* 기타 선택 시 나타나는 입력칸 */
+.etc-input { display: none; width: 100%; }
 
 /* 숫자 + 단위 접미사 */
 .input-suffix { display: flex; align-items: center; gap: 8px; }
@@ -615,7 +617,7 @@ a { color: inherit; text-decoration: none; }
 }
 .modal-dialog {
   position: relative; z-index: 1;
-  width: 100%; max-width: 480px;
+  width: 100%; max-width: 600px;
   max-height: 90vh; overflow-y: auto;
   background: var(--white);
   border-radius: var(--radius);
