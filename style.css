@@ -201,6 +201,67 @@ a { color: inherit; text-decoration: none; }
 }
 .section-desc { color: var(--ink-soft); }
 
+/* ---------- 철거 지원금 배너 ---------- */
+.subsidy { position: relative; z-index: 2; margin-top: -26px; padding-bottom: 6px; }
+.subsidy-card {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-deep));
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 30px 36px;
+  box-shadow: var(--shadow);
+}
+.subsidy-icon {
+  flex-shrink: 0;
+  width: 62px; height: 62px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--accent);
+}
+.subsidy-icon svg { width: 30px; height: 30px; }
+.subsidy-text { flex: 1; min-width: 0; }
+.subsidy-eyebrow {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.76rem;
+  margin-bottom: 8px;
+}
+.subsidy-text h2 {
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  color: #fff;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+.subsidy-text h2 strong { color: var(--accent); }
+.subsidy-sub { color: rgba(255, 255, 255, 0.82); margin-top: 8px; font-size: 0.98rem; }
+.subsidy-points {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 14px;
+}
+.subsidy-points li {
+  display: flex; align-items: center; gap: 7px;
+  font-weight: 600; font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.92);
+}
+.subsidy-points li::before { content: "✓"; color: var(--accent); font-weight: 800; }
+.subsidy .btn { flex-shrink: 0; }
+.btn-accent { background: var(--accent); color: var(--brand-deep); }
+.btn-accent:hover { background: var(--accent-dark); color: #fff; }
+
+@media (max-width: 820px) {
+  .subsidy-card { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .subsidy .btn { width: 100%; }
+}
+
 /* ---------- 서비스 카드 ---------- */
 .cards {
   display: grid;
@@ -229,20 +290,25 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 20px;
 }
 .card-icon svg { width: 27px; height: 27px; }
-.card h3 { font-size: 1.3rem; margin-bottom: 10px; }
-.card p { color: var(--ink-soft); margin-bottom: 16px; }
-.card-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.card h3 { font-size: 1.28rem; margin-bottom: 12px; letter-spacing: -0.01em; }
+.card p { color: var(--ink-soft); line-height: 1.62; margin-bottom: 20px; }
+.card-list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
 .card-list li {
   position: relative;
-  padding-left: 22px;
+  padding-left: 24px;
   color: var(--ink);
-  font-size: 0.95rem;
+  font-size: 0.96rem;
+  line-height: 1.4;
 }
 .card-list li::before {
   content: "✓";
-  position: absolute; left: 0;
+  position: absolute; left: 0; top: 0.05em;
   color: var(--brand);
   font-weight: 800;
+}
+/* 카드마다 문단 줄 수가 달라도 체크리스트 시작 높이를 맞춤 */
+@media (min-width: 901px) {
+  .card p { min-height: 6.5em; }
 }
 
 /* ---------- 강점 ---------- */
