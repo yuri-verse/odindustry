@@ -83,6 +83,14 @@ a { color: inherit; text-decoration: none; }
 .btn-ghost:hover { background: var(--brand-light); }
 .btn-block { width: 100%; }
 
+/* CTA 강조 펄스 (링이 퍼지는 효과) */
+@keyframes ctaPulse {
+  0%   { box-shadow: 0 10px 24px rgba(47, 93, 73, .24), 0 0 0 0 rgba(47, 93, 73, .5); }
+  70%  { box-shadow: 0 10px 24px rgba(47, 93, 73, .24), 0 0 0 16px rgba(47, 93, 73, 0); }
+  100% { box-shadow: 0 10px 24px rgba(47, 93, 73, .24), 0 0 0 0 rgba(47, 93, 73, 0); }
+}
+.cta-pulse { animation: ctaPulse 2s ease-out infinite; }
+
 /* ---------- 헤더 ---------- */
 .site-header {
   position: sticky;
@@ -564,25 +572,27 @@ body.modal-open { overflow: hidden; }
 
 /* ---------- 플로팅 문의 버튼 ---------- */
 .fab {
-  position: fixed; right: 22px; bottom: 22px; z-index: 120;
-  display: inline-flex; align-items: center; gap: 9px;
-  padding: 14px 22px;
+  position: fixed; right: 26px; bottom: 26px; z-index: 120;
+  display: inline-flex; align-items: center; gap: 11px;
+  padding: 18px 30px;
   border: none; border-radius: 999px;
   background: var(--accent); color: var(--brand-deep);
-  font: inherit; font-weight: 800; font-size: 1rem;
+  font: inherit; font-weight: 800; font-size: 1.12rem;
   cursor: pointer;
-  box-shadow: 0 12px 30px rgba(178, 138, 78, 0.45);
+  box-shadow: 0 14px 34px rgba(178, 138, 78, 0.5);
   transition: transform .18s ease, background .2s ease, color .2s ease;
 }
 .fab:hover { background: var(--accent-dark); color: #fff; transform: translateY(-2px); }
-.fab svg { width: 22px; height: 22px; }
+.fab svg { width: 26px; height: 26px; }
 @media (max-width: 560px) {
   .fab span { display: none; }
-  .fab { padding: 15px; }
+  .fab { padding: 18px; }
+  .fab svg { width: 28px; height: 28px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .modal-backdrop, .modal-dialog { animation: none; }
   .fab { transition: none; }
+  .cta-pulse { animation: none; }
 }
 
 /* ---------- 시공 사례 갤러리 ---------- */
