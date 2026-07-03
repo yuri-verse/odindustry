@@ -193,6 +193,106 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !contactModal.hidden) closeContactModal();
 });
 
+// ===== 인라인 달력 (클릭 단일 / 드래그 기간 선택) =====
+function initCalendar(rootId, inputId) {
+  const root = document.getElementById(rootId);
+  if (!root) return;
+  const daysEl = root.querySelector('.cal-days');
+  const titleEl = root.querySelector('.cal-title');
+  const selEl = root.querySelector('.cal-selected strong');
+  const input = document.getElementById(inputId);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let view = new Date(today.getFullYear(), today.getMonth(), 1);
+  let start = null;
+  let end = null;
+  let dragging = false;
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const fmt = (d) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  const parse = (s) => { const p = s.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); };
+  const order = () => {
+    if (!start) return [null, null];
+    const e = end || start;
+    return start <= e ? [start, e] : [e, start];
+  };
+
+  function update() {
+    const [lo, hi] = order();
+    daysEl.querySelectorAll('.cal-day').forEach((c) => {
+      c.classList.remove('is-start', 'is-end', 'is-range');
+      if (!c.dataset.date) return;
+      const d = parse(c.dataset.date);
+      if (lo && d >= lo && d <= hi) c.classList.add('is-range');
+      if (lo && fmt(d) === fmt(lo)) c.classList.add('is-start');
+      if (hi && fmt(d) === fmt(hi)) c.classList.add('is-end');
+    });
+    if (!lo) { input.value = ''; selEl.textContent = '없음'; return; }
+    const text = fmt(lo) === fmt(hi) ? fmt(lo) : fmt(lo) + ' ~ ' + fmt(hi);
+    input.value = text;
+    selEl.textContent = text;
+  }
+
+  function render() {
+    titleEl.textContent = view.getFullYear() + '년 ' + (view.getMonth() + 1) + '월';
+    daysEl.innerHTML = '';
+    const firstDow = new Date(view.getFullYear(), view.getMonth(), 1).getDay();
+    const total = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+    for (let i = 0; i < firstDow; i++) {
+      const b = document.createElement('span');
+      b.className = 'cal-day cal-empty';
+      daysEl.appendChild(b);
+    }
+    for (let d = 1; d <= total; d++) {
+      const date = new Date(view.getFullYear(), view.getMonth(), d);
+      const cell = document.createElement('button');
+      cell.type = 'button';
+      cell.className = 'cal-day';
+      cell.textContent = d;
+      if (date < today) { cell.classList.add('cal-past'); cell.disabled = true; }
+      else cell.dataset.date = fmt(date);
+      daysEl.appendChild(cell);
+    }
+    update();
+  }
+
+  const dayFromPoint = (x, y) => {
+    const el = document.elementFromPoint(x, y);
+    const c = el && el.closest ? el.closest('.cal-day') : null;
+    return c && c.dataset && c.dataset.date && !c.disabled ? c : null;
+  };
+
+  daysEl.addEventListener('pointerdown', (e) => {
+    const c = e.target.closest ? e.target.closest('.cal-day') : null;
+    if (!c || !c.dataset.date || c.disabled) return;
+    e.preventDefault();
+    dragging = true;
+    start = parse(c.dataset.date);
+    end = null;
+    update();
+  });
+  document.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const c = dayFromPoint(e.clientX, e.clientY);
+    if (c) { end = parse(c.dataset.date); update(); }
+  });
+  document.addEventListener('pointerup', () => { dragging = false; });
+
+  root.querySelector('[data-cal-prev]').addEventListener('click', () => {
+    view = new Date(view.getFullYear(), view.getMonth() - 1, 1);
+    render();
+  });
+  root.querySelector('[data-cal-next]').addEventListener('click', () => {
+    view = new Date(view.getFullYear(), view.getMonth() + 1, 1);
+    render();
+  });
+
+  render();
+}
+initCalendar('visitCal', 'visitValue');
+initCalendar('demoCal', 'demoValue');
+
 // ===== 시공 사례 갤러리 =====
 const galleryTabs = document.querySelectorAll('.gtab');
 const galleryItems = document.querySelectorAll('.ba-item');

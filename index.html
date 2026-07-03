@@ -378,8 +378,60 @@
             <label class="check-chip"><input type="checkbox" name="문의유형[]" value="기타" /><span>기타</span></label>
           </div>
         </div>
-        <label>문의 내용
-          <textarea name="message" rows="4" placeholder="현장 위치, 규모, 원하시는 일정 등을 적어주세요."></textarea>
+        <div class="type-field">
+          <span class="type-label">현장 <em>중복 선택 가능</em></span>
+          <div class="check-chips">
+            <label class="check-chip"><input type="checkbox" name="현장[]" value="아파트" /><span>아파트</span></label>
+            <label class="check-chip"><input type="checkbox" name="현장[]" value="상가" /><span>상가</span></label>
+            <label class="check-chip"><input type="checkbox" name="현장[]" value="오피스텔" /><span>오피스텔</span></label>
+            <label class="check-chip"><input type="checkbox" name="현장[]" value="사무실" /><span>사무실</span></label>
+            <label class="check-chip"><input type="checkbox" name="현장[]" value="공장" /><span>공장</span></label>
+            <label class="check-chip"><input type="checkbox" name="현장[]" value="기타" /><span>기타</span></label>
+          </div>
+        </div>
+        <div class="type-field">
+          <span class="type-label">희망 방문 일정 <em>날짜 클릭 · 드래그로 기간 선택</em></span>
+          <div class="cal" id="visitCal">
+            <div class="cal-head">
+              <button type="button" class="cal-nav" data-cal-prev aria-label="이전 달">‹</button>
+              <span class="cal-title"></span>
+              <button type="button" class="cal-nav" data-cal-next aria-label="다음 달">›</button>
+            </div>
+            <div class="cal-dow"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+            <div class="cal-days"></div>
+            <p class="cal-selected">선택한 날짜: <strong>없음</strong></p>
+            <input type="hidden" name="희망방문일정" id="visitValue" />
+          </div>
+        </div>
+
+        <div class="type-field">
+          <span class="type-label">철거 희망 일정 <em>날짜 클릭 · 드래그로 기간 선택</em></span>
+          <div class="cal" id="demoCal">
+            <div class="cal-head">
+              <button type="button" class="cal-nav" data-cal-prev aria-label="이전 달">‹</button>
+              <span class="cal-title"></span>
+              <button type="button" class="cal-nav" data-cal-next aria-label="다음 달">›</button>
+            </div>
+            <div class="cal-dow"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+            <div class="cal-days"></div>
+            <p class="cal-selected">선택한 날짜: <strong>없음</strong></p>
+            <input type="hidden" name="철거희망일정" id="demoValue" />
+          </div>
+        </div>
+
+        <label>현장 위치
+          <input type="text" name="현장위치" placeholder="예: 서울 강남구 ○○동 / 건물명" />
+        </label>
+
+        <label>규모 (평수)
+          <span class="input-suffix">
+            <input type="number" name="규모" min="0" placeholder="30" inputmode="numeric" />
+            <em>평</em>
+          </span>
+        </label>
+
+        <label>하고 싶은 말
+          <textarea name="message" rows="3" placeholder="현장 상황, 요청사항 등 하고 싶은 말을 자유롭게 적어주세요."></textarea>
         </label>
         <button type="submit" class="btn btn-primary btn-block">문의 보내기</button>
         <p class="form-note" id="formNote" hidden>문의가 접수되었습니다. 빠르게 연락드리겠습니다.</p>
