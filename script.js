@@ -193,6 +193,17 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !contactModal.hidden) closeContactModal();
 });
 
+// 좌상단 로고/OD INDUSTRY 클릭 시 맨 위로 스크롤
+const brandLink = document.querySelector('.brand');
+if (brandLink) {
+  brandLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    nav.classList.remove('open');
+    navToggle.classList.remove('open');
+  });
+}
+
 // ===== 인라인 달력 (여러 날짜 선택 / 드래그로 여러 날 선택·해제) =====
 function initCalendar(rootId, inputId) {
   const root = document.getElementById(rootId);
