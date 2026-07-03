@@ -22,12 +22,12 @@ nav.querySelectorAll('a').forEach((link) => {
 
 // 스크롤 등장 애니메이션 (같은 그룹은 순차 등장 - stagger)
 const revealTargets = document.querySelectorAll(
-  '.card, .feature, .steps li, .section-head, .contact-form, .contact-info'
+  '.card, .feature, .steps li, .section-head, .contact-form, .contact-info, .ba-item'
 );
 revealTargets.forEach((el) => el.classList.add('reveal'));
 
 // 형제 요소끼리 지연시간을 줘서 하나씩 나타나게 함
-document.querySelectorAll('.cards, .features, .steps').forEach((group) => {
+document.querySelectorAll('.cards, .features, .steps, .gallery-grid').forEach((group) => {
   Array.from(group.children).forEach((child, i) => {
     child.style.transitionDelay = i * 0.09 + 's';
   });
@@ -128,6 +128,54 @@ form.addEventListener('submit', async (e) => {
     submitBtn.disabled = false;
     submitBtn.textContent = original;
   }
+});
+
+// 시공 사례 갤러리 - 카테고리 탭
+const galleryTabs = document.querySelectorAll('.gtab');
+const galleryItems = document.querySelectorAll('.ba-item');
+galleryTabs.forEach((tab) => {
+  tab.addEventListener('click', () => {
+    const cat = tab.dataset.cat;
+    galleryTabs.forEach((t) => {
+      const active = t === tab;
+      t.classList.toggle('is-active', active);
+      t.setAttribute('aria-selected', String(active));
+    });
+    galleryItems.forEach((item) => {
+      item.hidden = item.dataset.cat !== cat;
+    });
+  });
+});
+
+// 시공 사례 갤러리 - before/after 비교 슬라이더
+document.querySelectorAll('.ba').forEach((ba) => {
+  const range = ba.querySelector('.ba-range');
+  const setPos = (pct) => {
+    const clamped = Math.max(0, Math.min(100, pct));
+    ba.style.setProperty('--pos', clamped + '%');
+    if (range) range.value = clamped;
+  };
+
+  // 포인터 드래그(마우스 + 터치)
+  let dragging = false;
+  const posFromEvent = (e) => {
+    const rect = ba.getBoundingClientRect();
+    setPos(((e.clientX - rect.left) / rect.width) * 100);
+  };
+  ba.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    ba.setPointerCapture(e.pointerId);
+    posFromEvent(e);
+  });
+  ba.addEventListener('pointermove', (e) => {
+    if (dragging) posFromEvent(e);
+  });
+  const stop = () => { dragging = false; };
+  ba.addEventListener('pointerup', stop);
+  ba.addEventListener('pointercancel', stop);
+
+  // 키보드 접근용 range
+  if (range) range.addEventListener('input', () => setPos(Number(range.value)));
 });
 
 // 히어로 제목 타이핑 효과

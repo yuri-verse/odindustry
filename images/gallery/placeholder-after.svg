@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="시공 후 사진 준비 중">
+  <rect width="800" height="600" fill="#58645C"/>
+  <rect x="20" y="20" width="760" height="560" fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="3" stroke-dasharray="14 12"/>
+  <text x="400" y="290" text-anchor="middle" font-family="'Pretendard','Malgun Gothic',system-ui,sans-serif" font-size="64" font-weight="800" letter-spacing="6" fill="#ffffff">AFTER</text>
+  <text x="400" y="345" text-anchor="middle" font-family="'Pretendard','Malgun Gothic',system-ui,sans-serif" font-size="30" fill="#ffffff" fill-opacity="0.9">사진 준비 중</text>
+</svg>
