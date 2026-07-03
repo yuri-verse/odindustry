@@ -369,14 +369,15 @@
         <label>연락처
           <input type="tel" name="phone" placeholder="010-0000-0000" required />
         </label>
-        <label>문의 유형
-          <select name="type">
-            <option value="원상복구">원상복구</option>
-            <option value="철거">철거</option>
-            <option value="인테리어">인테리어</option>
-            <option value="기타">기타</option>
-          </select>
-        </label>
+        <div class="type-field">
+          <span class="type-label">문의 유형 <em>중복 선택 가능</em></span>
+          <div class="check-chips">
+            <label class="check-chip"><input type="checkbox" name="문의유형[]" value="원상복구" /><span>원상복구</span></label>
+            <label class="check-chip"><input type="checkbox" name="문의유형[]" value="철거" /><span>철거</span></label>
+            <label class="check-chip"><input type="checkbox" name="문의유형[]" value="인테리어" /><span>인테리어</span></label>
+            <label class="check-chip"><input type="checkbox" name="문의유형[]" value="기타" /><span>기타</span></label>
+          </div>
+        </div>
         <label>문의 내용
           <textarea name="message" rows="4" placeholder="현장 위치, 규모, 원하시는 일정 등을 적어주세요."></textarea>
         </label>
