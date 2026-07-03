@@ -149,6 +149,7 @@ form.addEventListener('submit', async (e) => {
     if (res.ok) {
       showNote('문의가 접수되었습니다. 빠르게 연락드리겠습니다.', 'success');
       form.reset();
+      setTimeout(closeContactModal, 2200); // 접수 후 팝업 자동 닫기
     } else {
       showNote('전송에 실패했습니다. 잠시 후 다시 시도하시거나 전화로 문의해 주세요.', 'error');
     }
@@ -158,6 +159,38 @@ form.addEventListener('submit', async (e) => {
     submitBtn.disabled = false;
     submitBtn.textContent = original;
   }
+});
+
+// ===== 문의 팝업(모달) =====
+const contactModal = document.getElementById('contactModal');
+let modalLastFocus = null;
+
+function openContactModal(e) {
+  if (e) e.preventDefault();
+  modalLastFocus = document.activeElement;
+  if (formNote) formNote.hidden = true; // 이전 안내 메시지 초기화
+  contactModal.hidden = false;
+  document.body.classList.add('modal-open');
+  const firstField = contactModal.querySelector('input, select, textarea');
+  if (firstField) setTimeout(() => firstField.focus(), 60);
+}
+function closeContactModal() {
+  contactModal.hidden = true;
+  document.body.classList.remove('modal-open');
+  if (modalLastFocus && modalLastFocus.focus) modalLastFocus.focus();
+}
+
+// 열기: data-open-contact 요소 + 기존 #contact 링크 전부
+document.querySelectorAll('[data-open-contact], a[href="#contact"]').forEach((el) => {
+  el.addEventListener('click', openContactModal);
+});
+// 닫기: 닫기 버튼 / 배경 클릭
+contactModal.querySelectorAll('[data-close-contact]').forEach((el) => {
+  el.addEventListener('click', closeContactModal);
+});
+// ESC 로 닫기
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !contactModal.hidden) closeContactModal();
 });
 
 // ===== 시공 사례 갤러리 =====
