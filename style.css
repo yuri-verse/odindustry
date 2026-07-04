@@ -590,6 +590,64 @@ a { color: inherit; text-decoration: none; }
 .input-suffix { display: flex; align-items: center; gap: 8px; }
 .input-suffix input { flex: 1; }
 .input-suffix em { font-style: normal; font-weight: 600; color: var(--ink-soft); }
+/* 개인정보 수집·이용 동의 */
+.consent-field { display: flex; flex-direction: column; gap: 8px; }
+.consent-details {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fbfdfe;
+  font-size: 0.88rem;
+}
+.consent-details summary {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--ink);
+  list-style: none;
+}
+.consent-details summary::-webkit-details-marker { display: none; }
+.consent-details summary::after { content: '＋'; float: right; color: var(--ink-soft); }
+.consent-details[open] summary::after { content: '－'; }
+.consent-details ul {
+  margin: 0; padding: 0 14px 12px;
+  list-style: none;
+  display: flex; flex-direction: column; gap: 6px;
+  color: var(--ink-soft); line-height: 1.5;
+}
+.consent-details ul strong {
+  display: inline-block; min-width: 68px;
+  color: var(--ink); font-weight: 600;
+}
+.contact-form .consent-check {
+  display: flex; flex-direction: row; align-items: center; gap: 10px;
+  cursor: pointer; font-weight: 500;
+}
+.consent-check input {
+  position: absolute; opacity: 0; pointer-events: none;
+  width: 0; height: 0;
+}
+.consent-check > span {
+  flex: none;
+  width: 22px; height: 22px;
+  border: 1px solid var(--line); border-radius: 6px;
+  background: #fbfdfe;
+  display: grid; place-items: center;
+  transition: background .15s ease, border-color .15s ease;
+}
+.consent-check > span::after {
+  content: '';
+  width: 6px; height: 11px;
+  margin-top: -2px;
+  border: solid #fff; border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform .15s ease;
+}
+.consent-check input:checked + span { background: var(--brand); border-color: var(--brand); }
+.consent-check input:checked + span::after { transform: rotate(45deg) scale(1); }
+.consent-check input:focus-visible + span { box-shadow: 0 0 0 3px rgba(47, 93, 73, 0.2); }
+.consent-check em { font-style: normal; font-size: 0.92rem; color: var(--ink); }
+.consent-check em strong { color: var(--brand-dark); font-weight: 700; }
+
 .form-note {
   margin: 0;
   color: var(--brand-dark);

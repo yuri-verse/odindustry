@@ -131,6 +131,11 @@ form.addEventListener('submit', async (e) => {
     showNote('이름과 연락처를 입력해 주세요.', 'error');
     return;
   }
+  const consent = form.querySelector('input[name="개인정보동의"]');
+  if (consent && !consent.checked) {
+    showNote('개인정보 수집 · 이용에 동의해 주세요.', 'error');
+    return;
+  }
   if (FORMSPREE_ID === 'REPLACE_ME') {
     showNote('폼 연동이 아직 설정되지 않았습니다. 전화로 문의해 주세요.', 'error');
     return;
