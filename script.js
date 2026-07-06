@@ -89,6 +89,23 @@ const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
+// CONTACT·푸터가 화면에 보이면 플로팅 버튼 숨김 (같은 버튼 중복·겹침 방지)
+const floatHideTargets = [document.getElementById('contact'), document.querySelector('.site-footer')].filter(Boolean);
+if (floatHideTargets.length) {
+  const floatVisible = new Set();
+  const floatObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) floatVisible.add(entry.target);
+        else floatVisible.delete(entry.target);
+      });
+      document.body.classList.toggle('floating-hidden', floatVisible.size > 0);
+    },
+    { threshold: 0.05 }
+  );
+  floatHideTargets.forEach((el) => floatObserver.observe(el));
+}
+
 // 히어로 통계 숫자 카운트업
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.querySelectorAll('.hero-stats strong[data-count]').forEach((el) => {

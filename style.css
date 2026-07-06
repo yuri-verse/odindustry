@@ -752,7 +752,7 @@ body.modal-open { overflow: hidden; }
   font: inherit; font-weight: 800; font-size: 1.12rem;
   cursor: pointer;
   box-shadow: 0 14px 34px rgba(178, 138, 78, 0.5);
-  transition: transform .18s ease, background .2s ease, color .2s ease;
+  transition: transform .18s ease, background .2s ease, color .2s ease, opacity .25s ease;
 }
 .fab:hover { background: var(--accent-dark); color: #fff; transform: translateY(-2px); }
 .fab svg { width: 26px; height: 26px; }
@@ -767,9 +767,17 @@ body.modal-open { overflow: hidden; }
   font: inherit; font-weight: 800; font-size: 1.12rem;
   text-decoration: none;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
-  transition: transform .18s ease, box-shadow .2s ease;
+  transition: transform .18s ease, box-shadow .2s ease, opacity .25s ease;
 }
 .fab-kakao:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28); }
+
+/* CONTACT·푸터 노출 시 플로팅 버튼 숨김 */
+body.floating-hidden .fab,
+body.floating-hidden .fab-kakao {
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+}
 .fab-kakao svg { width: 26px; height: 26px; }
 @media (max-width: 560px) {
   .fab span { display: none; }
