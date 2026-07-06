@@ -22,6 +22,10 @@ const GALLERY_ITEMS = [
   { cat: 'restore', before: 'images/gallery/restore-16-before.jpg', after: 'images/gallery/restore-16-after.jpg' },
 ];
 
+// 히어로 전용 슬라이드 순서 - 갤러리와 별개 (숫자는 restore-NN, 앞에 올수록 먼저 노출 / 목록에서 빼면 히어로에서 제외)
+const HERO_ORDER = [12, 1, 2, 3, 4, 5, 7, 8, 10, 13, 14, 15, 16];
+const HERO_ITEMS = HERO_ORDER.map((n) => GALLERY_ITEMS[n - 1]);
+
 const galleryTrack = document.getElementById('galleryTrack');
 if (galleryTrack) {
   galleryTrack.innerHTML = GALLERY_ITEMS.map((it) => `
@@ -35,6 +39,90 @@ if (galleryTrack) {
         <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="시공 전후 비교 슬라이더" />
       </div>
     </figure>`).join('');
+}
+
+// 히어로 풀블리드 시공사진 슬라이드쇼 - before 사진이 after 로 닦이며(wipe) 자동 전환
+const heroBg = document.getElementById('heroBg');
+if (heroBg && HERO_ITEMS.length) {
+  const track = document.createElement('div');
+  track.className = 'hero-track';
+  // 마지막에 첫 항목을 복제해 끝에서 처음으로 매끄럽게 이어지도록(무한 루프)
+  const items = [...HERO_ITEMS, HERO_ITEMS[0]];
+  track.innerHTML = items
+    .map(
+      (it) => `
+    <div class="hero-slide">
+      <div class="hs-before" style="background-image:url('${it.before}')"></div>
+      <div class="hs-after" style="background-image:url('${it.after}')"></div>
+      <div class="hs-line" aria-hidden="true"></div>
+    </div>`
+    )
+    .join('');
+  heroBg.appendChild(track);
+
+  const slideEls = Array.from(track.children);
+  const total = HERO_ITEMS.length;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion || total <= 1) {
+    // 모션 최소화: 첫 사진의 완성(after) 상태만 정적으로 표시
+    slideEls[0].querySelector('.hs-after').style.clipPath = 'inset(0 0 0 0)';
+  } else {
+    const BEAT = 650; // before 를 잠깐 보여주는 시간
+    const WIPE = 1700; // before→after 닦임 시간 (CSS transition 과 일치)
+    const HOLD = 1600; // after 를 유지하는 시간
+    const SLIDE = 1100; // 다음 사진으로 가로 이동 시간
+    let i = 0;
+
+    const resetWipes = () => {
+      slideEls.forEach((el) => {
+        const after = el.querySelector('.hs-after');
+        const line = el.querySelector('.hs-line');
+        after.style.transition = 'none';
+        after.style.clipPath = 'inset(0 100% 0 0)';
+        line.style.transition = 'none';
+        line.style.left = '0%';
+        line.style.opacity = '0';
+      });
+    };
+
+    const reveal = (el) => {
+      const after = el.querySelector('.hs-after');
+      const line = el.querySelector('.hs-line');
+      after.offsetWidth; // 리플로우 강제 - transition 이 확실히 걸리도록
+      const ease = `${WIPE}ms cubic-bezier(.4,0,.2,1)`;
+      after.style.transition = `clip-path ${ease}`;
+      after.style.clipPath = 'inset(0 0 0 0)';
+      line.style.opacity = '1'; // 경계선은 즉시 켜고
+      line.style.transition = `left ${ease}`;
+      line.style.left = '100%'; // 닦이는 지점을 따라 이동
+    };
+
+    const goNext = () => {
+      const target = i + 1;
+      track.style.transition = `transform ${SLIDE}ms cubic-bezier(.4,0,.2,1)`;
+      track.style.transform = `translateX(-${target * 100}%)`;
+      setTimeout(() => {
+        if (target === total) {
+          // 복제된 첫 사진 도달 → 애니메이션 없이 원점으로 리셋
+          track.style.transition = 'none';
+          track.style.transform = 'translateX(0)';
+          i = 0;
+        } else {
+          i = target;
+        }
+        playAt(i);
+      }, SLIDE);
+    };
+
+    const playAt = (idx) => {
+      resetWipes();
+      setTimeout(() => reveal(slideEls[idx]), BEAT);
+      setTimeout(goNext, BEAT + WIPE + HOLD);
+    };
+
+    playAt(0);
+  }
 }
 
 // 모바일 메뉴 토글

@@ -159,9 +159,12 @@ a { color: inherit; text-decoration: none; }
 /* ---------- 히어로 ---------- */
 .hero {
   position: relative;
-  background: linear-gradient(180deg, var(--brand-050), var(--paper));
-  padding: 92px 0 84px;
+  background: var(--brand-deep);
+  padding: 120px 0 96px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: min(88vh, 760px);
 }
 .eyebrow {
   color: var(--accent-dark);
@@ -224,7 +227,7 @@ a { color: inherit; text-decoration: none; }
 .section-desc { color: var(--ink-soft); }
 
 /* ---------- 핵심 강조 카드 (지원금 / 직접 계약) ---------- */
-.highlights { position: relative; z-index: 2; margin-top: -26px; padding-bottom: 6px; }
+.highlights { position: relative; z-index: 2; margin-top: 0; padding: 56px 0 6px; }
 .highlights-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1148,6 +1151,56 @@ body.floating-hidden .fab-kakao {
 
 /* 통계 숫자 카운트업 중 폭 흔들림 방지 */
 .hero-stats strong { font-variant-numeric: tabular-nums; }
+
+/* ---------- 히어로 풀블리드 시공사진 슬라이드쇼 ---------- */
+.hero-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.hero-track { display: flex; height: 100%; will-change: transform; }
+.hero-slide {
+  position: relative;
+  flex: 0 0 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.hs-before,
+.hs-after {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+/* after 는 처음엔 완전히 가려져 있다가 왼쪽→오른쪽으로 닦이며 등장 */
+.hs-after { clip-path: inset(0 100% 0 0); }
+/* 닦이는 경계선 - 얇은 세로 선 + 은은한 광택 */
+.hs-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0.15));
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
+}
+/* 사진 위 어두운 오버레이 — 텍스트 가독성 확보 */
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(15, 30, 24, 0.86) 0%, rgba(15, 30, 24, 0.58) 46%, rgba(15, 30, 24, 0.38) 100%),
+    linear-gradient(180deg, rgba(15, 30, 24, 0.34), rgba(15, 30, 24, 0.68));
+}
+
+/* 어두운 사진 배경 위 밝은 텍스트 (기존 규칙보다 뒤에 두어 확실히 적용) */
+.hero .eyebrow { color: #e4c98f; }
+.hero-title { color: #fff; }
+.hero-title .accent { color: #d9b877; }
+.hero-sub { color: rgba(255, 255, 255, 0.9); }
+.hero-stats strong { color: #e4c98f; }
+.hero-stats span { color: rgba(255, 255, 255, 0.82); }
+.hero .type-cursor { background: #d9b877; }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
