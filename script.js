@@ -2,16 +2,24 @@
 
 // 시공 사례 데이터 - 여기에 항목을 추가하면 갤러리에 자동 반영됩니다.
 //   cat: 'restore'(원상복구·철거) 또는 'interior'(인테리어)
-//   before/after: 사진 경로,  caption: 사례 설명
+//   before/after: 사진 경로 (화면에는 사진만 노출, 제목 없음)
 const GALLERY_ITEMS = [
-  { cat: 'restore',  before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 상가 원상복구' },
-  { cat: 'restore',  before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 사무실 철거' },
-  { cat: 'restore',  before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 건물 내부 철거' },
-  { cat: 'restore',  before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 매장 원상복구' },
-  { cat: 'interior', before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 카페 인테리어' },
-  { cat: 'interior', before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 사무실 인테리어' },
-  { cat: 'interior', before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 매장 인테리어' },
-  { cat: 'interior', before: 'images/gallery/placeholder-before.svg', after: 'images/gallery/placeholder-after.svg', caption: '○○ 주택 인테리어' },
+  { cat: 'restore', before: 'images/gallery/restore-01-before.jpg', after: 'images/gallery/restore-01-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-02-before.jpg', after: 'images/gallery/restore-02-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-03-before.jpg', after: 'images/gallery/restore-03-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-04-before.jpg', after: 'images/gallery/restore-04-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-05-before.jpg', after: 'images/gallery/restore-05-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-06-before.jpg', after: 'images/gallery/restore-06-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-07-before.jpg', after: 'images/gallery/restore-07-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-08-before.jpg', after: 'images/gallery/restore-08-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-09-before.jpg', after: 'images/gallery/restore-09-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-10-before.jpg', after: 'images/gallery/restore-10-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-11-before.jpg', after: 'images/gallery/restore-11-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-12-before.jpg', after: 'images/gallery/restore-12-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-13-before.jpg', after: 'images/gallery/restore-13-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-14-before.jpg', after: 'images/gallery/restore-14-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-15-before.jpg', after: 'images/gallery/restore-15-after.jpg' },
+  { cat: 'restore', before: 'images/gallery/restore-16-before.jpg', after: 'images/gallery/restore-16-after.jpg' },
 ];
 
 const galleryTrack = document.getElementById('galleryTrack');
@@ -19,14 +27,13 @@ if (galleryTrack) {
   galleryTrack.innerHTML = GALLERY_ITEMS.map((it) => `
     <figure class="ba-item" data-cat="${it.cat}">
       <div class="ba" style="--pos:50%">
-        <img class="ba-img ba-after" src="${it.after}" alt="시공 후 - ${it.caption}" />
-        <img class="ba-img ba-before" src="${it.before}" alt="시공 전 - ${it.caption}" />
+        <img class="ba-img ba-after" src="${it.after}" alt="원상복구·철거 시공 후" loading="lazy" />
+        <img class="ba-img ba-before" src="${it.before}" alt="원상복구·철거 시공 전" loading="lazy" />
         <span class="ba-tag ba-tag-before">BEFORE</span>
         <span class="ba-tag ba-tag-after">AFTER</span>
         <div class="ba-handle" aria-hidden="true"></div>
         <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="시공 전후 비교 슬라이더" />
       </div>
-      <figcaption>${it.caption}</figcaption>
     </figure>`).join('');
 }
 
